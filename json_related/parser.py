@@ -11,8 +11,8 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
     
     # Open up the non-tracking files now
     
-    gameFile = json.load(open('games.json'))
-    playerFile = json.load(open('players.json'))
+    gameFile = json.load(open('tracking_box_hackathon/games.json'))
+    playerFile = json.load(open('tracking_box_hackathon/players.json'))
     
     
     for filename in files_tracking:
@@ -80,7 +80,7 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 new_data['awayplayers'][str(away)]['on_court'] = []
 
             period = new_data['period'][int(i/5)]
-            player_time = abs(new_data['gameclock'][i/5]-720.0)+ (period-1)*720.0
+            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
 
             new_data['awayplayers'][str(away)]['on_court'].append(player_time)
 
@@ -103,8 +103,8 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 new_data['homeplayers'][str(home)]['xyz'] = []
                 new_data['homeplayers'][str(home)]['on_court'] = []
 		
-            period = new_data['period'][i/5]
-            player_time = abs(new_data['gameclock'][i/5]-720.0)+ (period-1)*720.0
+            period = new_data['period'][int(i/5)]
+            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
 
             new_data['awayplayers'][str(away)]['on_court'].append(player_time)
 
@@ -135,24 +135,20 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
 
 
             xyz = new_data['awayplayers'][str(key)]['xyz']
-            new_data['awayplayers'][str(key)]['x'] = tuple(zip(*xyz)[0])
-            new_data['awayplayers'][str(key)]['y'] = tuple(zip(*xyz)[1])
-            new_data['awayplayers'][str(key)]['z'] = tuple(zip(*xyz)[2])
 
-
-
-
+            zipped_xyz = list(zip(*xyz))
+            new_data['awayplayers'][str(key)]['x'], new_data['awayplayers'][str(key)]['y'], new_data['awayplayers'][str(key)]['z'] = zipped_xyz
+           
         for key in list(new_data['homeplayers'].keys()):
 
             xyz = new_data['homeplayers'][str(key)]['xyz']
-            new_data['homeplayers'][str(key)]['x'] = tuple(zip(*xyz)[0])
-            new_data['homeplayers'][str(key)]['y'] = tuple(zip(*xyz)[1])
-            new_data['homeplayers'][str(key)]['z'] = tuple(zip(*xyz)[2])
-
-
-
+            
+            zipped_xyz = list(zip(*xyz))
+            new_data['homeplayers'][str(key)]['x'], new_data['homeplayers'][str(key)]['y'], new_data['homeplayers'][str(key)]['z'] = zipped_xyz
+       
+       
+       
         xyz = new_data['ball_xyz']
-
         new_data['ballXyz'] = {}
 
 
@@ -162,18 +158,9 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
             if len(xyz[i]) < 3:
                 xyz[i] = xyz[i-1]
 
-        new_data['ballXyz']['x'] = tuple(zip(*xyz)[0])
-        new_data['ballXyz']['y'] = tuple(zip(*xyz)[1])
-        new_data['ballXyz']['z'] = tuple(zip(*xyz)[2])
-
-
-
-
-
-
-
-        
-
+        zipped_xyz = list(zip(*xyz))
+        new_data['ballXyz']['x'], new_data['ballXyz']['y'], new_data['ballXyz']['z'] = zipped_xyz
+ 
         # maps player names from their ids, renames their keys as their names for readability sake
         # and then stores their id as a seperate key in case it is needed later on
 
@@ -202,7 +189,7 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
 
         # attaches all game stats to each player
         # and then stores team stats seperately
-        new_data['gameclock'] = tuple(np.add( abs(np.subtract(new_data['gameclock'],720.0)) , (np.subtract(new_data['period'], 1)*720.0) )) 
+        new_data['gameclock'] = list(np.add( abs(np.subtract(new_data['gameclock'],720.0)) , (np.subtract(new_data['period'], 1)*720.0) )) 
 	
 	
         new_data['gameStatus'] = box_score['game-state']
