@@ -4,5 +4,5 @@ Second Spectrum (link?)
 
 To-do
 * Read in data efficiently. 
-* Running average for position (5 point smoothing?)
+* [Running average](https://en.wikipedia.org/wiki/Moving_average) for position (5 point smoothing?)
 * Calc velocities and *accelerations*. Both should be smoother now. 
