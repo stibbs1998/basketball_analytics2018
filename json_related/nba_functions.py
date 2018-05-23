@@ -1,5 +1,13 @@
 import numpy as np
 
+
+def smoothing(a,n):
+    ret = np.cumsum(a, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    return ret[n - 1:] /n
+
+
+
 def velo(data,steps):
     
     for key in list(data.keys()):
@@ -9,37 +17,20 @@ def velo(data,steps):
         for team in ['awayplayers','homeplayers']:
             
             for player in list(data[key][team].keys()):
-                
-                x, y = data[key][team][player]['x'], data[key][team][player]['y']
-                x2, y2 = np.multiply(x,x) , np.multiply(y,y)
-                dist = np.add(x2,y2)
-                R = np.sqrt(dist)
-                time = np.linspace(0, len(R), len(R))
-                t = np.multiply(time,0.04)
-                
-                R1, R2 = R[1:], R[:-1]
-                t1, t2 = t[1:], t[:-1]
-                
-                delta_t,delta_R = np.subtract(t1,t2), np.subtract(R1,R2)
-                velocity = abs(np.divide(delta_R,delta_t))
-                
-                for i in range(0,len(velocity)):
 
-                    if velocity[i] >= 40:
-                        velocity[i] = velocity[i-1]
-                        
-                       
-                for i in range(0,steps):
-                    
-                    v1,v2 = velocity[1:],velocity[:-1]
-                    v_sum = np.add(v1,v2)
-                    
-                    
-                    velocity = np.divide(v_sum,2)
+                x1,y1 = np.array(data[key][team][player]['x']), np.array(data[key][team][player]['y'])
+                x,y = smoothing(x,5),smoothing(y,5)
+                dx, dy = x[2:] - x[:-2], y[2:] - y[:-2]
+                dist = np.sqrt(np.square(dx) + np.square(dy))
+                velo = dist/0.08
+                time = np.linspace(0,len(x1),len(x1))*0.04
+                new_time = time[2:-2]
+                velo_time = new_time[1:-1]
+                data[key][team][player]['velo'] = velo
+                data[key][team][player]['smoothX'] = x
+                data[key][team][player]['smoothY'] = y
+                data[key][team][player]['velotime'] = velo_time
 
-                
-                data[key][team][player]['velo'] = velocity
-                data[key][team][player]['avg_velo'] = np.average(velocity)
 
 
 #def kineticEnergy(data):
