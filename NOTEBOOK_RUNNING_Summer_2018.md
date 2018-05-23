@@ -11,8 +11,8 @@ How is data stored in a [JSON file](http://www.json.org/)??
 Data in a JSON file is structured very similarly to that of a python dictionary.  Here's an example:
 
 { <br/>
-    </ul> "value_string": "hello world!",<br/>
-    "value_number": 3.14159265,<br/>
+> "value_string": "hello world!",<br/>
+> "value_number": 3.14159265,<br/>
     "value_array":[<br/>
     a, <br/>
     b, <br/>
