@@ -30,5 +30,7 @@ The name of each value is defined in quotes, followed by a colon and the assigne
 * numbers
 * objects
 * arrays
-* booleans <br/>
+* booleans 
+
+
 Booleans are written as *true, false*, and *null*, opposed to *True, False*, and *None* in Python.  Using the [json module](https://docs.python.org/2/library/json.html), when a JSON file is read into Python, the file is read in as a dictionary, and the name of each value is accessible as a unicode key within the dictionary.  Arrays are converted into lists, and *true,false*, and *null* are converted into *True, False*, and *None*. 
