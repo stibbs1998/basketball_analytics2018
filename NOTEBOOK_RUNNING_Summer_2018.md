@@ -7,11 +7,11 @@ To-do
 * [Running average](https://en.wikipedia.org/wiki/Moving_average) for position (5 point smoothing?)
 * Calc velocities and *accelerations*. Both should be smoother now. 
 
-How is data stored in a [.JSON file](http://www.json.org/)??
-Data in a .JSON file is structured very similarly to that of a python dictionary.  Here's an example:
+How is data stored in a [JSON file](http://www.json.org/)??
+Data in a JSON file is structured very similarly to that of a python dictionary.  Here's an example:
 
 {
-    "value_string": "hello world!", \n
+    + "value_string": "hello world!", \n
     "value_number": 3.14159265,
     "value_array":[
     a,
