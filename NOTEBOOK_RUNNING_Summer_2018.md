@@ -9,7 +9,7 @@ To-do
 
 How is data stored in a [JSON file](http://www.json.org/)??
 Data in a JSON file is structured very similarly to that of a python dictionary.  Here's an example:
-
+```
 { <br/>
  "value_string": "hello world!",<br/>
  "value_number": 3.14159265,<br/>
@@ -24,7 +24,7 @@ Data in a JSON file is structured very similarly to that of a python dictionary.
  }, <br/>
  "Kevin Durant is a snake": true <br/>
  } <br/>
-
+```
 The name of each value is defined in quotes, followed by a colon and the assigned value.  Commas are used to seperate values. As seen above, values can be defined as:
 * strings
 * numbers
