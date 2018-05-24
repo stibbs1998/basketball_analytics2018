@@ -34,18 +34,20 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
             data['homeplayers'] = []
             new_data['period'] = []
             new_data['ball_xyz'] = []
-            new_data['wallclock'] = []
+            #new_data['wallclock'] = []
             new_data['gameclock'] = []
-                   
+            new_data['on_court'] = []
+
             for line in f:
                 
-                # get data for clocks and the basketaball
-
+            # get data for clocks and the basketaball
+                
                 game_clock = line.get('gameClock')
+                new_data['on_court'].append(line.get('gameClockStopped'))
                 new_data['gameclock'].append(game_clock)
                 new_data['period'].append(line.get('period'))
                 new_data['ball_xyz'].append(line.get('ball'))
-                new_data['wallclock'].append(line.get('wallClock'))
+                #new_data['wallclock'].append(line.get('wallClock'))
 
                 # We use temporary lists for the home/away teams so we can
                 # first extract the data, and then sort it by player_ids
@@ -60,8 +62,8 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 for i in range(0,len(line.get('homePlayers'))):
                     
                     data['homeplayers'].append(line.get('homePlayers')[i])
-		
-	
+                
+            
 
         print('Assigining data to players...')
         
@@ -79,15 +81,17 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 new_data['awayplayers'][str(away)]['xyz'] = []
                 new_data['awayplayers'][str(away)]['on_court'] = []
 
-            period = new_data['period'][int(i/5)]
-            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
+            time_in_out = new_data['on_court'][int(i/5)]
 
-            new_data['awayplayers'][str(away)]['on_court'].append(player_time)
+            period = new_data['period'][int(i/5)]
+#            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
+
+            new_data['awayplayers'][str(away)]['on_court'].append(time_in_out)
 
             player_away = data['awayplayers'][i]['xyz']
             
-            if len(player_away) < 3:
-                player_away = (0,0,0)
+            if len(player_away) < 3 or time_in_out == True:
+                player_away = [np.NaN,np.NaN,np.NaN]
                 
             new_data['awayplayers'][str(away)]['xyz'].append(player_away)
 
@@ -103,10 +107,12 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 new_data['homeplayers'][str(home)]['xyz'] = []
                 new_data['homeplayers'][str(home)]['on_court'] = []
 		
-            period = new_data['period'][int(i/5)]
-            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
+            time_in_out = new_data['on_court'][int(i/5)]
 
-            new_data['awayplayers'][str(away)]['on_court'].append(player_time)
+            period = new_data['period'][int(i/5)]
+#            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
+
+            new_data['awayplayers'][str(away)]['on_court'].append(time_in_out)
 
     
             player_home = data['homeplayers'][i]['xyz']
@@ -116,8 +122,8 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
             # in this case, we are just going to assume that their coordinates are (0,0,0)
     
            
-            if len(player_home) < 3:
-                player_home = (0,0,0)
+            if len(player_home) < 3 or time_in_out == True:
+                player_home = [np.NaN,np.NaN,np.NaN]
 
            
             new_data['homeplayers'][str(home)]['xyz'].append(player_home)
