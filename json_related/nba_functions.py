@@ -85,9 +85,11 @@ def mass_rockets(data):
 def ball_flagger(data):
 
     for game in data.keys():
-        
-        x = np.array(data[game]['ballXyz']['x'])
-        data[game]['ball_zone'] =  x>0
-        period = np.array(data[game]['period'])
-        
-        
+       # so far this is based entirely on zone.... need to test for closest player as well 
+        x_all = np.array(data[game]['ballXyz']['x'])
+        right  =  x_all>0
+        period = np.array( data[game]['period'] )
+        first = period<0
+        second = period >2
+        rockets = (first and right) or (second and not right)
+        warriors = not rockets 
