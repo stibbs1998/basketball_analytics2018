@@ -80,3 +80,14 @@ def mass_rockets(data):
                 if (playerdata[1][player][1:-1]+playerdata[0][player][1:]) in data[game][team].keys():
 
                     data[game][team][playerdata[1][player][1:-1]+playerdata[0][player][1:]]['mass'] = float(playerdata[5][player][0:3])*0.453592
+
+
+def ball_flagger(data):
+
+    for game in data.keys():
+        
+        x = np.array(data[game]['ballXyz']['x'])
+        data[game]['ball_zone'] =  x>0
+        period = np.array(data[game]['period'])
+        
+        
