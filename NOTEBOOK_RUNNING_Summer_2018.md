@@ -44,6 +44,6 @@ The tracking data files we have are known as [JSONL files](http://jsonlines.org/
 To-do
 * Get player velocities, accelerations, work, etc. set
 * Try to seperate data points into offense and defense
- + different speeds on offense v. defense?
- + more work exerted on which side?
+   * different speeds on offense v. defense?
+   * more work exerted on which side?
 * Compare average speeds of players on offense and defense and see if any difference is noticeable
