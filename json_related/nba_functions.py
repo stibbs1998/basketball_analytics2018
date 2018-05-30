@@ -67,7 +67,7 @@ def mass_warriors(data):
 
 
 
-def mass_rockets(data):
+def mass_away(data):
 
     playerdata = np.loadtxt('rockets_weights.csv',delimiter=',',dtype=str,skiprows=1,unpack=True)
  
@@ -91,5 +91,7 @@ def ball_flagger(data):
         period = np.array( data[game]['period'] )
         first = period<0
         second = period >2
-        rockets = (first and right) or (second and not right)
-        warriors = not rockets 
+        away = np.logical_and(first,right) # or (second and not right)
+        warriors = np.logical_not(away)
+        data[game]['home_poss'] = warriors
+        data[game]['away_poss'] = away
