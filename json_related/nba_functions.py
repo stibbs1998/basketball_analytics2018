@@ -88,10 +88,11 @@ def ball_flagger(data):
        # so far this is based entirely on zone.... need to test for closest player as well 
         x_all = np.array(data[game]['ballXyz']['x'])
         right  =  x_all>0
+        left = x_all<0
         period = np.array( data[game]['period'] )
-        first = period<0
+        first = period<3
         second = period >2
-        away = np.logical_and(first,right) # or (second and not right)
+        away = np.logical_or(np.logical_and(first,right), np.logical_and(second,left)) # or (second and not right)
         warriors = np.logical_not(away)
         data[game]['home_poss'] = warriors
         data[game]['away_poss'] = away
