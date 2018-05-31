@@ -8,6 +8,43 @@ def smoothing(a,n):
 
 
 
+def positional_smoothing(data):
+        for game in data.keys():
+            for team in ['homeplayers','awayplayers']:
+                for key in data[game][team].keys():
+                    data[game][team][key]['SmoothXYZ'] = {}
+                    data[game][team][key]['SmoothXYZ']['x'] = smoothing(data[game][team][key]['x'], 5) 
+                    data[game][team][key]['SmoothXYZ']['y'] = smoothing(data[game][team][key]['y'], 5) 
+                    data[game][team][key]['SmoothXYZ']['z'] = smoothing(data[game][team][key]['z'], 5)
+
+
+def velo_accel_smoothing(data):
+
+    for game in data.keys():
+
+        for team in ['homeplayers','awayplayers']:
+
+            for key in data[game][team].keys():
+                x = data[game][team][key]['SmoothXYZ']['x']
+                y = data[game][team][key]['SmoothXYZ']['y']
+                dx = np.array(x[2:]) - np.array(x[:-2])
+                dy = np.array(y[2:]) - np.array(y[:-2])
+               # dist = np.sqrt(np.square(dx)+np.square(dy))
+                dist = np.array((dx,dy))
+                velo = dist/0.08
+                mag_velo = np.sqrt(np.square(velo[0])+np.square(velo[1]))
+                data[game][team][key]['smooth_velo'] = velo
+                data[game][team][key]['smooth_velo_mag'] = mag_velo
+                dvx = velo[0][2:]-velo[0][:-2]
+                dvy = velo[1][2:]-velo[1][:-2]
+                dv = np.array((dvx,dvy))
+                accel = dv/0.08
+                acc_mag = np.sqrt(np.square(accel[0])+np.square(accel[1]))
+                data[game][team][key]['smooth_accel_mag'] = acc_mag
+                data[game][team][key]['smooth_accel'] = accel
+
+
+
 def velo_accel(data):
 
     for game in data.keys():
@@ -22,13 +59,17 @@ def velo_accel(data):
                # dist = np.sqrt(np.square(dx)+np.square(dy))
                 dist = np.array((dx,dy))
                 velo = dist/0.08
+                mag_velo = np.sqrt(np.square(velo[0])+np.square(velo[1]))
                 data[game][team][key]['velo'] = velo
+                data[game][team][key]['velo_mag'] = mag_velo
                 dvx = velo[0][2:]-velo[0][:-2]
                 dvy = velo[1][2:]-velo[1][:-2]
                 dv = np.array((dvx,dvy))
                 accel = dv/0.08
+                acc_mag = np.sqrt(np.square(accel[0])+np.square(accel[1]))
+                data[game][team][key]['accel_mag'] = acc_mag
+                data[game][team][key]['accel'] = accel
 
-                data[game][team][key]['accel'] = accel	
 
    
 

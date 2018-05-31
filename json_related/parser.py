@@ -66,7 +66,8 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
             
 
         print('Assigining data to players...')
-        
+        new_data['gameclock'] = list(np.add( abs(np.subtract(new_data['gameclock'],720.0)) , (np.subtract(new_data['period'], 1)*720.0) )) 
+	      
         # this sorts the players from their temporary list to the game list
         # adds their xyz components, and a time indexer (still in progress)
 
@@ -80,14 +81,14 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 new_data['awayplayers'][str(away)] = {}
                 new_data['awayplayers'][str(away)]['xyz'] = []
                 new_data['awayplayers'][str(away)]['on_court'] = []
+                new_data['awayplayers'][str(away)]['time_slice'] = []
 
             time_in_out = new_data['on_court'][int(i/5)]
-
+            t_slc = int(i/5)
             period = new_data['period'][int(i/5)]
-#            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
 
             new_data['awayplayers'][str(away)]['on_court'].append(time_in_out)
-
+            new_data['awayplayers'][str(away)]['time_slice'].append(t_slc)
             player_away = data['awayplayers'][i]['xyz']
             
             if len(player_away) < 3 or time_in_out == True:
@@ -106,20 +107,23 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
                 new_data['homeplayers'][str(home)] = {}
                 new_data['homeplayers'][str(home)]['xyz'] = []
                 new_data['homeplayers'][str(home)]['on_court'] = []
+                new_data['homeplayers'][str(home)]['time_slice'] = []
 		
             time_in_out = new_data['on_court'][int(i/5)]
+            t_slc = int(i/5)
+            new_data['homeplayers'][str(home)]['time_slice'].append(t_slc)
 
             period = new_data['period'][int(i/5)]
 #            player_time = abs(new_data['gameclock'][int(i/5)]-720.0)+ (period-1)*720.0
 
-            new_data['awayplayers'][str(away)]['on_court'].append(time_in_out)
+            new_data['homeplayers'][str(home)]['on_court'].append(time_in_out)
 
     
             player_home = data['homeplayers'][i]['xyz']
  
             
             # there are some points where the camera doesn't pick up a player's coordinates
-            # in this case, we are just going to assume that their coordinates are (0,0,0)
+            # in this case, we are just going to assume that their coordinates are not a number.
     
            
             if len(player_home) < 3 or time_in_out == True:
@@ -195,10 +199,18 @@ def sorting(files_tracking, files_box_score):  # take in a LIST of MULTIPLE file
 
         # attaches all game stats to each player
         # and then stores team stats seperately
-        new_data['gameclock'] = list(np.add( abs(np.subtract(new_data['gameclock'],720.0)) , (np.subtract(new_data['period'], 1)*720.0) )) 
-	
+
 	
         new_data['gameStatus'] = box_score['game-state']
+
+
+
+
+
+
+
+
+
 
         new_data['teamStats'] = {}
 
