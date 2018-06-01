@@ -168,4 +168,11 @@ def ball_flagger(data):
 
 
 
+def player_flagger(data):
+    for game in data.keys():
+        for team in ['homeplayers', 'awayplayers']:
+            for key in data[game][team].keys():
+                ind = data[game][team][key]['time_slice']
+                team_poss =data[game][team[:4]+'_poss']
+                data[game][team][key]['poss'] = team_poss[ind]
 
