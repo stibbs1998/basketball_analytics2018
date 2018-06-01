@@ -4,7 +4,12 @@ import numpy as np
 def smoothing(a,n):
     ret = np.nancumsum(a, dtype=float)
     ret[n:] = ret[n:] - ret[:-n]
-    return ret[n - 1:] /n
+    final = ret[n-1:]/n
+    for i in range(len(final)):
+
+        if np.any(np.isnan(np.array(a[i:i+n]))):
+            final[i] = np.nan
+    return final
 
 
 
@@ -13,10 +18,31 @@ def positional_smoothing(data):
             for team in ['homeplayers','awayplayers']:
                 for key in data[game][team].keys():
                     data[game][team][key]['SmoothXYZ'] = {}
-                    data[game][team][key]['SmoothXYZ']['x'] = smoothing(data[game][team][key]['x'], 5) 
-                    data[game][team][key]['SmoothXYZ']['y'] = smoothing(data[game][team][key]['y'], 5) 
-                    data[game][team][key]['SmoothXYZ']['z'] = smoothing(data[game][team][key]['z'], 5)
 
+                    x =  smoothing(data[game][team][key]['x'], 5) 
+                    y =  smoothing(data[game][team][key]['y'], 5) 
+                    z =  smoothing(data[game][team][key]['z'], 5) 
+
+
+                     
+
+#                    x = x.astype('float')
+#                    y = y.astype('float')
+#                    z = z.astype('float')
+#
+#
+#                    x[x==0] = np.NaN
+#                    y[y==0] = np.NaN
+#                    z[z==0] = np.NaN
+
+
+
+
+
+
+                    data[game][team][key]['SmoothXYZ']['x'] = x 
+                    data[game][team][key]['SmoothXYZ']['y'] = y
+                    data[game][team][key]['SmoothXYZ']['z'] = z
 
 def velo_accel_smoothing(data):
 
@@ -137,3 +163,9 @@ def ball_flagger(data):
         warriors = np.logical_not(away)
         data[game]['home_poss'] = warriors
         data[game]['away_poss'] = away
+
+
+
+
+
+
