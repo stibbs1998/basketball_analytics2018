@@ -175,4 +175,25 @@ def player_flagger(data):
                 ind = data[game][team][key]['time_slice']
                 team_poss =data[game][team[:4]+'_poss']
                 data[game][team][key]['poss'] = team_poss[ind]
+                
+def distance(player,ball,time_ind):
+    x = np.array(player['x'] )
+    y = np.array(player['y'] )
+    x2 =np.array( ball['x'])[time_ind]
+    y2 =np.array( ball['y'])[time_ind]
+    dist = np.sqrt(np.square(np.subtract(x2,x)) + np.square(np.subtract(y2,y)))
+    return dist
+
+def player_flagger2(data):
+    for game in data.keys():
+        ballxyz = data[game]['ballXyz']
+        for team in ['homeplayers','awayplayers']:
+            for key in data[game][team].keys():
+                time_indexer = data[game][team][key]['time_slice']
+               
+                dist_ball = distance(data[game][team][key],ballxyz,time_indexer)
+                near_ball = dist_ball <= 3
+                ind_poss = np.logical_and(near_ball,data[game][team][key]['poss'])
+                data[game][team][key]['ind_poss'] = ind_poss
+
 
