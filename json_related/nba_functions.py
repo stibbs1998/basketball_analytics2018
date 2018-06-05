@@ -196,4 +196,31 @@ def player_flagger2(data):
                 ind_poss = np.logical_and(near_ball,data[game][team][key]['poss'])
                 data[game][team][key]['ind_poss'] = ind_poss
 
+#
+#def closest_to_ball(data):
+#    for game in data.keys():
+#        ballxyz = data[game]['ballXyz']
+#        for team in ['homeplayers', 'awayplayers']:
+#            data[game][team[0:4]] = {}
+#            
+#            #########
+#            for i in range(len(ballxyz['x'])):
+#                data[game][team[0:4]][str(i)] = []
+#
+#            print('team done')
+#            #########
+#
+#
+#            for key in data[game][team].keys():
+#
+#                print(key,'player done')
+#                ind = data[game][team][key]['time_slice']
+#                dist = distance(data[game][team][key],ballxyz,ind)
+#                #for i in ind:
+#                #    index = ind.index(i)
+#                #    data[game][team]['dist_to_ball'][str(i)].append(dist[index])
+#
+#            
+#
+
 
