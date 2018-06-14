@@ -99,23 +99,39 @@ def velo_accel(data):
 
    
 
-def energy(data):	# W = F*d(cos(phi)) = $\delta$ KE
-	
-	for game in data.keys():
+def smooth_energy(data):
 
-		for team in ['homeplayers','awayplayers']:
+    for game in data.keys():
 
-			for key in data[game][team].keys():
-                                x = data[game][team][key]['x']
-                                y = data[game][team][key]['y']
-                                dx = np.array(x[4:]) - np.array(x[:-4])
-                                dy = np.array(y[4:]) - np.array(y[:-4])
-                                d = np.array((dx,dy))
-                                mass = data[game][team][key]['mass']
-                                acc = data[game][team][key]['accel']
-                                force = np.multiply(mass,acc)
-                                Work = np.multiply(force,d)	
-                                data[game][team][key]['work'] = Work
+        for team in ['homeplayers','awayplayers']:
+
+            for key in data[game][team].keys():
+
+                x = data[game][team][key]['SmoothXYZ']['x']
+                y  = data[game][team][key]['SmoothXYZ']['y']
+                dx =np.array(x[2:]-x[:-2])
+                dy =np.array(y[2:]-y[:-2])
+                dist = np.array((dx,dy))
+                velo = dist/0.08*0.3048 # conversion from ft/s to m/s
+                dvx = velo[0][2:] - velo[0][:-2]
+                dvy = velo[1][2:] - velo[1][:-2]
+                dv = np.array((dvx,dvy))
+                acc = dv/0.08
+                mass =  data[game][team][key]['mass']
+
+                
+
+                work = mass*np.multiply(acc,dist[:,1:-1])
+                work = np.abs(work)
+                
+                data[game][team][key]['work'] = np.add(work[0],work[1])
+
+                 
+
+
+
+
+
 
 
 def mass_warriors(data):
@@ -126,9 +142,11 @@ def mass_warriors(data):
 
         for player in range(len(playerdata[0])):
             
-            for team in ['homeplayers']:
+            for team in ['homeplayers','awayplayers']:
 
                 if (playerdata[1][player][1:-1]+playerdata[0][player][1:]) in data[game][team].keys():
+
+# convert the mass from lbs to kg
 
                     data[game][team][playerdata[1][player][1:-1]+playerdata[0][player][1:]]['mass'] = float(playerdata[5][player][0:3])*0.453592
 
@@ -142,7 +160,7 @@ def mass_away(data):
 
         for player in range(len(playerdata[0])):
             
-            for team in ['awayplayers']:
+            for team in ['homeplayers','awayplayers']:
 
                 if (playerdata[1][player][1:-1]+playerdata[0][player][1:]) in data[game][team].keys():
 
