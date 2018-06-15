@@ -240,31 +240,65 @@ def player_flagger2(data):
 #
 #            
 #
+import requests
+from bs4 import BeautifulSoup
+import re
 
 def get_masses(data):
 
-	for game in data.keys():
+    for game in data.keys():
 
-		home = game[14:17]
-		away = game[11:14]
+        home = 'GSW' # [14:17]
+        away = 'HOU' # [11:14]
 
-		for team in ['homeplayers','awayplayers']:
-			url = 'http://www.espn.com/nba/team/roster/_/name/%s' %(home)
-			if team == 'awayplayers':
-				url = 'http://www.espn.com/nba/team/roster/_/name/%s' %(away)
+        for team in ['homeplayers','awayplayers']:
 
-			r = requests.get(url)
-			data = r.text
+            url = 'http://www.espn.com/nba/team/roster/_/name/%s' %(home)
+            if team == 'awayplayers':
+                url = 'http://www.espn.com/nba/team/roster/_/name/%s' %(away)
 
-			soup = BeautifulSoup(data,'html.parser')
-			for row in soup('tr'):
+            r = requests.get(url)
+            dataa = r.text
 
-				cols = row.find_all('td')
-				cols = [ele.text.strip() for ele in cols]
+            soup = BeautifulSoup(dataa,'html.parser')
+            for row in soup('tr'):
 
-				if len(cols) > 5 and cols[1] != 'NAME':
+                cols = row.find_all('td')
+                cols = [ele.text.strip() for ele in cols]
 
-					name = cols[1]
-					data[game][team][name]['mass'] = cols[5]
+                if len(cols) > 5 and cols[1] != 'NAME':
+
+                    name = cols[1]
+                    new_name = name.replace(" ", "")
+                    if new_name in data[game][team].keys():
+                        data[game][team][new_name]['mass'] = float(cols[5])*0.453592
+                    
 
 
+            for key in data[game][team].keys():
+                if 'mass' not in data[game][team][key].keys():
+                    name = (re.sub('([A-Z])',r' \1', key))
+                    name = name[1:]
+                    newer_name = name.replace(" ","_")
+                    ind = newer_name.index("_")+1
+                    newest_name = newer_name.lower()
+                    last_init = newest_name[ind]
+
+
+
+                    print("Look up %s's mass" %key)
+                    
+                    url = 'http://www.landofbasketball.com/nba_players/%s/%s.htm' %(last_init,newest_name)
+                    r = requests.get(url)
+                    dataa = r.text
+                    soup = BeautifulSoup(dataa,'html.parser')
+
+                    for row in soup('tr'):
+
+                        cols = row.find_all('td')
+                        cols = [ele.text.strip() for ele in cols]
+                        if cols[0] == 'Weight:':
+
+                            w = cols[1][:3]
+                            data[game][team][key]['mass'] = float(w)*0.453592
+                            
