@@ -241,4 +241,30 @@ def player_flagger2(data):
 #            
 #
 
+def get_masses(data):
+
+	for game in data.keys():
+
+		home = game[14:17]
+		away = game[11:14]
+
+		for team in ['homeplayers','awayplayers']:
+			url = 'http://www.espn.com/nba/team/roster/_/name/%s' %(home)
+			if team == 'awayplayers':
+				url = 'http://www.espn.com/nba/team/roster/_/name/%s' %(away)
+
+			r = requests.get(url)
+			data = r.text
+
+			soup = BeautifulSoup(data,'html.parser')
+			for row in soup('tr'):
+
+				cols = row.find_all('td')
+				cols = [ele.text.strip() for ele in cols]
+
+				if len(cols) > 5 and cols[1] != 'NAME':
+
+					name = cols[1]
+					data[game][team][name]['mass'] = cols[5]
+
 
