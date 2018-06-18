@@ -248,8 +248,8 @@ def get_masses(data):
 
     for game in data.keys():
 
-        home = 'GSW' # [14:17]
-        away = 'HOU' # [11:14]
+        home = str(game[14:17])
+        away = str(game[11:14])
 
         for team in ['homeplayers','awayplayers']:
 
@@ -277,28 +277,34 @@ def get_masses(data):
 
             for key in data[game][team].keys():
                 if 'mass' not in data[game][team][key].keys():
-                    name = (re.sub('([A-Z])',r' \1', key))
-                    name = name[1:]
-                    newer_name = name.replace(" ","_")
-                    ind = newer_name.index("_")+1
-                    newest_name = newer_name.lower()
-                    last_init = newest_name[ind]
+                    if key == 'LucMbah a Moute':
+                        data[game][team][key]['mass'] = 229*0.453592
+                    elif key == 'FrankMason':
+                        data[game][team][key]['mass'] = 194*0.453592
+
+                    else:
+                        name = (re.sub('([A-Z])',r' \1', key))
+                        name = name[1:]
+                        newer_name = name.replace(" ","_")
+                        ind = newer_name.index("_")+1
+                        newest_name = newer_name.lower()
+                        last_init = newest_name[ind]
 
 
 
-                    print("Look up %s's mass" %key)
-                    
-                    url = 'http://www.landofbasketball.com/nba_players/%s/%s.htm' %(last_init,newest_name)
-                    r = requests.get(url)
-                    dataa = r.text
-                    soup = BeautifulSoup(dataa,'html.parser')
+                        print("Look up %s's mass" %key)
+                        
+                        url = 'http://www.landofbasketball.com/nba_players/%s/%s.htm' %(last_init,newest_name)
+                        r = requests.get(url)
+                        dataa = r.text
+                        soup = BeautifulSoup(dataa,'html.parser')
 
-                    for row in soup('tr'):
+                        for row in soup('tr'):
 
-                        cols = row.find_all('td')
-                        cols = [ele.text.strip() for ele in cols]
-                        if cols[0] == 'Weight:':
+                            cols = row.find_all('td')
+                            cols = [ele.text.strip() for ele in cols]
+                            if cols[0] == 'Weight:':
 
-                            w = cols[1][:3]
-                            data[game][team][key]['mass'] = float(w)*0.453592
-                            
+                                w = cols[1][:3]
+                                data[game][team][key]['mass'] = float(w)*0.453592
+                                
