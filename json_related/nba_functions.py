@@ -281,6 +281,17 @@ def get_masses(data):
                         data[game][team][key]['mass'] = 229*0.453592
                     elif key == 'FrankMason':
                         data[game][team][key]['mass'] = 194*0.453592
+                    elif key == 'NoneNene':
+                        data[game][team][key]['mass'] = 250*0.453592
+                    elif key == 'TJLeaf':
+                        data[game][team][key]['mass'] = 230*0.453592
+                    elif key == 'OttoPorter Jr.':
+                        data[game][team][key]['mass'] = 203*0.453592
+                    elif key == 'KellyOubre Jr.':
+                        data[game][team][key]['mass'] = 205*0.453592
+
+
+
 
                     else:
                         name = (re.sub('([A-Z])',r' \1', key))
