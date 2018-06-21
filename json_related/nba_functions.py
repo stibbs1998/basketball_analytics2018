@@ -299,11 +299,12 @@ def get_masses(data):
                         newer_name = name.replace(" ","_")
                         ind = newer_name.index("_")+1
                         newest_name = newer_name.lower()
+                        
                         last_init = newest_name[ind]
 
 
 
-                        print("Look up %s's mass" %key)
+                        print("Look up %s's mass" %newest_name)
                         
                         url = 'http://www.landofbasketball.com/nba_players/%s/%s.htm' %(last_init,newest_name)
                         r = requests.get(url)
